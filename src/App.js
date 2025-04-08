@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchWeather } from "./services/weatherApi";
+import WeatherCard from "./components/WeatherCard";
 
 function App() {
   const [city, setCity] = useState("");
@@ -8,8 +9,14 @@ function App() {
   const handleSearch = async () => {
     try {
       const data = await fetchWeather(city);
-      setData(data);
-      console.log(data);
+      setData({
+        city: data.name,
+        country: data.sys.country,
+        temperature: Math.floor(data.main.temp),
+        description: data.weather[0].description,
+        icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`,
+      });
+      // console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +33,9 @@ function App() {
   
 
   useEffect(() => {
-
+    if (data) {
+      console.log(data);
+    }
   }, []);
   return (
     <div className="w-full h-screen bg-gray-100 flex justify-center">
@@ -44,7 +53,9 @@ function App() {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className="bg-blue-600 h-[720px] w-[600px] rounded-2xl shadow-md drop-shadow-xl"></div>
+        <div className="bg-blue-600 h-[720px] w-[600px] rounded-2xl shadow-md drop-shadow-xl text-white p-6">
+          {data && <WeatherCard {...data} />}
+        </div>
       </div>
     </div>
   );

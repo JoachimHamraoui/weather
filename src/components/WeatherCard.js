@@ -1,3 +1,4 @@
+
 export default function WeatherCard({city, country, temperature, description, icon}) {
     return (
         <div className="">
